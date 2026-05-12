@@ -1,0 +1,8 @@
+version: 2
+sources:
+  - name: maple_fit
+    database: 'product-analytics-494706'
+    schema: maple_fit
+    tables:
+      - name: users
+      - name: events
