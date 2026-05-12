@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: int_user_revenue
+    description: "Intermediate model performing currency conversion to CAD"
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: revenue_cad
+        description: "Standardized revenue"
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">=0"
+          
+          

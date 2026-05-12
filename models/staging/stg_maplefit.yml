@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Cleaned user data from the fitness app"
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: preferred_currency
+        tests:
+          - accepted_values:
+              arguments: 
+                values: ['CAD','GBP']
+
+  - name: stg_events
+    description: "Atomic event logs with standardized timestamps."
+    columns:
+      - name: event_at
+        description: 'The datetime the event occurred.'
+        tests:
+          - not_null
+      - name: event_type
+        description: "The specific action taken by the user."
+          
+
+          

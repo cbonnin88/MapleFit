@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: fct_active_users
+    description: '{{doc("active_users_logic")}}'
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: country
+        tests:
+          - accepted_values:
+              arguments: 
+                values: ['Canada','United Kingdom']
+      - name: total_events
+        description: "Used to determine user engagement levels."
+        tests:
+          - not_null
+          
+          
+          
