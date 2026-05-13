@@ -55,3 +55,39 @@ The app features a **Feature Recommendation Engine** that selects a specific int
 ├── data_generation.ipynb # Polars script for synthetic data
 ├── app.py                # Streamlit application code
 └── README.md             # Project documentation
+```
+
+
+## 📊 View BigQuery SQL: MoM Cohort Retention
+
+**Business Logic:**  
+This query calculates retention by grouping users into monthly cohorts based on their signup date and tracking their activity in subsequent months. This is used to identify the "churn point" in the user lifecycle.
+
+```sql
+WITH user_cohorts AS (
+  -- Define the "Birth" month for each user
+  SELECT 
+    user_id, 
+    DATE_TRUNC(DATE(signup_date), MONTH) as cohort_month
+  FROM `maplefit-analytics.maplefit_marts.stg_users`
+),
+
+active_months AS (
+  -- Identify every month a user performed an action
+  SELECT DISTINCT 
+    user_id, 
+    DATE_TRUNC(DATE(timestamp), MONTH) as activity_month
+  FROM `maplefit-analytics.maplefit_marts.stg_events`
+)
+
+SELECT 
+  c.cohort_month,
+  -- Calculate the delta between signup and activity
+  DATE_DIFF(a.activity_month, c.cohort_month, MONTH) as month_number,
+  COUNT(DISTINCT a.user_id) as active_users
+FROM user_cohorts c
+JOIN active_months a 
+  ON c.user_id = a.user_id
+GROUP BY 1, 2
+ORDER BY 1, 2;
+```
